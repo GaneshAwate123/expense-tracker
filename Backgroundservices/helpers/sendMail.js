@@ -17,7 +17,7 @@ let configurations = {
     auth    : {
         user : process.env.EMAIL,
         pass : process.env.PASSWORD
-    };
+    }
 };
 
 const sendMail = async (messageOption) => {
