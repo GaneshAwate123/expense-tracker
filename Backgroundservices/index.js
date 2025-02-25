@@ -7,21 +7,27 @@ const { expenseEmail } = require("./EmailService/Expense");
 const app = express();
 dotenv.config();
 
-mongoose.connect(process.env.DB_CONNECTION).then(()=>{
-    console.log("Database is connected successfully.");
-}).catch((err)=>{
-    console.log(err);
-});
+// Connect to MongoDB
+mongoose.connect(process.env.DB_CONNECTION)
+    .then(() => {
+        console.log("Database is connected successfully.");
+    })
+    .catch((err) => {
+        console.error("Database connection error:", err);
+    });
 
-const schedule = ()=>{
-    cron.schedule('* * * * * *', ()=> {
+// Schedule the expense email check to run daily at midnight
+const schedule = () => {
+    cron.schedule('0 * * * * *', () => { // Runs every day at midnight (00:00)
+        console.log('Running expense check task...');
         expenseEmail();
-        console.log('running a task every minute');
     });
 };
 
 schedule();
 
-app.listen(process.env.PORT,()=>{
-    console.log(`Background services are running on port ${process.env.PORT}`);
+// Start the server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+    console.log(`Background services are running on port ${PORT}`);
 });
